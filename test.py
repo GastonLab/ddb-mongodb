@@ -9,6 +9,7 @@ import argparse
 import vcf_parsing
 
 from cyvcf2 import VCF
+from bson import ObjectId
 from datetime import datetime
 from pymongo import MongoClient
 from collections import defaultdict
@@ -48,6 +49,7 @@ def get_amplicon_data(variant):
 if __name__ == "__main__":
     sample = ""
     library = ""
+    date = datetime.today()
 
     client = MongoClient()
     db = client['ddb']
@@ -83,6 +85,9 @@ if __name__ == "__main__":
     # retain any that are above the threshold but in COSMIC or in ClinVar and not listed as benign.
     sys.stdout.write("Processing individual variants\n")
 
+    lib_variant_inserts = list()
+    variant_inserts = list()
+
     for var in vcf:
         # Parsing VCF and creating data structures for Cassandra model
         callers = var.INFO.get('CALLERS').split(',')
@@ -93,6 +98,9 @@ if __name__ == "__main__":
 
         var_key_string = "GRCh37.75_{}_{}_{}_{}".format(var.CHROM, var.start, var.REF, var.ALT[0])
         library_var_key_string = "GRCh37.75_{}_{}_{}_{}_{}".format(library, var.CHROM, var.start, var.REF, var.ALT[0])
+
+        var_id = ObjectId(var_key_string)
+        lib_var_id = ObjectId(library_var_key_string)
 
         caller_variant_data_dicts = defaultdict(dict)
         max_som_aaf = -1.00
@@ -110,3 +118,76 @@ if __name__ == "__main__":
 
         if min_depth == 100000000:
             min_depth = -1
+
+        variant_inserts.append(
+            {
+                "_id": var_id,
+                "chr": var.CHROM,
+                "start": var.start,
+                "end": var.end,
+                "ref": var.REF,
+                "alt": var.ALT[0],
+                "subtype": var.INFO.get('sub_type'),
+                "type": var.INFO.get('type'),
+                "rs_id": var.ID,
+                "date_annotated": datetime.now(),
+
+                "gene_info": {
+                    "gene": top_impact.gene,
+                    "transcript": top_impact.transcript,
+                    "exon": top_impact.exon,
+                    "codon_change": top_impact.codon_change,
+                    "biotype": top_impact.biotype,
+                    "aa_change": top_impact.aa_change,
+                },
+
+                "impact_info": {
+                    "severity": top_impact.effect_severity,
+                    "impact": top_impact.top_consequence,
+                    "impact_so": top_impact.so,
+                    "is_clinvar_pathogenic": vcf_parsing.var_is_pathogenic(var),
+                    "is_lof": vcf_parsing.var_is_lof(var),
+                    "is_coding": vcf_parsing.var_is_coding(var),
+                    "is_splicing": vcf_parsing.var_is_splicing(var),
+                    "in_clinvar": vcf_parsing.var_is_in_clinvar(var)
+                },
+
+                "cosmic_info": {
+                    "in_cosmic": vcf_parsing.var_is_in_cosmic(var)
+                },
+
+                "freq_info": {
+                    "max_maf_all": var.INFO.get('max_aaf_all') or -1,
+                    "max_maf_no_fin": var.INFO.get('max_aaf_no_fin') or -1,
+                },
+
+                "rs_ids": vcf_parsing.parse_rs_ids(var),
+                "cosmic_ids": vcf_parsing.parse_cosmic_ids(var),
+
+                "grades": [
+                    {
+                        "date": datetime.strptime("2014-10-01", "%Y-%m-%d"),
+                        "grade": "A",
+                        "score": 11
+                    },
+                    {
+                        "date": datetime.strptime("2014-01-16", "%Y-%m-%d"),
+                        "grade": "B",
+                        "score": 17
+                    }
+                ],
+                "address": {
+                    "street": "2 Avenue",
+                    "zipcode": "10075",
+                    "building": "1480",
+                    "coord": [-73.9557413, 40.7720266]
+                }
+            })
+
+        lib_variant_inserts.append(
+            {
+                "_id": lib_var_id,
+            })
+
+    db['lib_var_collection'].insert_many(lib_variant_inserts)
+    db['var_collection'].insert_many(variant_inserts)
