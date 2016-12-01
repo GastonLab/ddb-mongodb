@@ -118,11 +118,11 @@ if __name__ == "__main__":
                                                                 samples[sample]['library_name'], var.CHROM,
                                                                 var.start, var.REF, var.ALT[0])
 
-            var_hex = hashlib.md5(var_key_string.encode('utf-8')).digest()
-            lib_var_hex = hashlib.md5(library_var_key_string.encode('utf-8')).digest()
-
-            var_id = ObjectId(var_hex)
-            lib_var_id = ObjectId(lib_var_hex)
+            # var_hex = hashlib.md5(var_key_string.encode('utf-8')).digest()
+            # lib_var_hex = hashlib.md5(library_var_key_string.encode('utf-8')).digest()
+            #
+            # var_id = ObjectId(var_hex)
+            # lib_var_id = ObjectId(lib_var_hex)
 
             caller_variant_data_dicts = defaultdict(dict)
             max_som_aaf = -1.00
