@@ -240,5 +240,6 @@ if __name__ == "__main__":
                     }
                 })
 
+        sys.stdout.write("Adding info to database for library: {}\n".format(samples[sample]['library_name']))
         db['lib_var_collection'].insert_many(lib_variant_inserts)
         db['var_collection'].insert_many(variant_inserts)
