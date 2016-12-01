@@ -5,6 +5,7 @@ import sys
 import utils
 import cyvcf2
 import getpass
+import hashlib
 import argparse
 import vcf_parsing
 import configuration
@@ -116,6 +117,9 @@ if __name__ == "__main__":
             library_var_key_string = "{}_{}_{}_{}_{}_{}".format(config['genome_version'],
                                                                 samples[sample]['library_name'], var.CHROM,
                                                                 var.start, var.REF, var.ALT[0])
+
+            var_hex = hashlib.sha224(var_key_string.encode('utf-8')).hexdigest()
+            lib_var_hex = hashlib.sha224(library_var_key_string.encode('utf-8')).hexdigest()
 
             var_id = ObjectId(var_key_string)
             lib_var_id = ObjectId(library_var_key_string)
