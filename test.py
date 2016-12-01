@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
             variant_inserts.append(
                 {
-                    "_id": var_id,
+                    "_id": var_key_string,
                     "chr": var.CHROM,
                     "start": var.start,
                     "end": var.end,
@@ -214,7 +214,7 @@ if __name__ == "__main__":
 
             lib_variant_inserts.append(
                 {
-                    "_id": lib_var_id,
+                    "_id": library_var_key_string,
                     "sample": samples[sample]['sample_name'],
                     "extraction": samples[sample]['extraction'],
                     "library_name": samples[sample]['library_name'],
