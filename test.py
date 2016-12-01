@@ -118,8 +118,8 @@ if __name__ == "__main__":
                                                                 samples[sample]['library_name'], var.CHROM,
                                                                 var.start, var.REF, var.ALT[0])
 
-            var_hex = hashlib.sha224(var_key_string.encode('utf-8')).hexdigest()
-            lib_var_hex = hashlib.sha224(library_var_key_string.encode('utf-8')).hexdigest()
+            var_hex = hashlib.md5(var_key_string.encode('utf-8')).hexdigest()
+            lib_var_hex = hashlib.md5(library_var_key_string.encode('utf-8')).hexdigest()
 
             var_id = ObjectId(var_hex)
             lib_var_id = ObjectId(lib_var_hex)
