@@ -19,8 +19,8 @@ def parse_vcf(vcf_file, caller, caller_vcf_records):
             sys.stderr.write("ERROR: More than one alternative allele detected in file "
                              "{}\n Record: {}\n".format(vcf_file, record))
             sys.exit()
-        key = (unicode("chr{}".format(record.CHROM)), int(record.start), int(record.end), unicode(record.REF),
-               unicode(record.ALT[0]))
+        key = ("chr{}".format(record.CHROM), int(record.start), int(record.end), record.REF,
+               record.ALT[0])
         caller_vcf_records[caller][key] = record
 
 
