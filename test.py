@@ -121,8 +121,8 @@ if __name__ == "__main__":
             var_hex = hashlib.sha224(var_key_string.encode('utf-8')).hexdigest()
             lib_var_hex = hashlib.sha224(library_var_key_string.encode('utf-8')).hexdigest()
 
-            var_id = ObjectId(var_key_string)
-            lib_var_id = ObjectId(library_var_key_string)
+            var_id = ObjectId(var_hex)
+            lib_var_id = ObjectId(lib_var_hex)
 
             caller_variant_data_dicts = defaultdict(dict)
             max_som_aaf = -1.00
