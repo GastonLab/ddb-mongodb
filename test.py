@@ -179,7 +179,7 @@ if __name__ == "__main__":
                         "in_cosmic": vcf_parsing.var_is_in_cosmic(var)
                     },
 
-                    "transcripts_data": utils.get_transcript_effects(effects),
+                    # "transcripts_data": utils.get_transcript_effects(effects),
                     "clinvar_data": utils.get_clinvar_info(var),
                     "cosmic_data": utils.get_cosmic_info(var),
 
@@ -191,25 +191,6 @@ if __name__ == "__main__":
 
                     "rs_ids": vcf_parsing.parse_rs_ids(var),
                     "cosmic_ids": vcf_parsing.parse_cosmic_ids(var),
-
-                    "grades": [
-                        {
-                            "date": datetime.strptime("2014-10-01", "%Y-%m-%d"),
-                            "grade": "A",
-                            "score": 11
-                        },
-                        {
-                            "date": datetime.strptime("2014-01-16", "%Y-%m-%d"),
-                            "grade": "B",
-                            "score": 17
-                        }
-                    ],
-                    "address": {
-                        "street": "2 Avenue",
-                        "zipcode": "10075",
-                        "building": "1480",
-                        "coord": [-73.9557413, 40.7720266]
-                    }
                 })
 
             lib_variant_inserts.append(
