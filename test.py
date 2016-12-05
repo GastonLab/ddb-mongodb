@@ -118,8 +118,8 @@ if __name__ == "__main__":
                                                                 samples[sample]['library_name'], var.CHROM,
                                                                 var.start, var.REF, var.ALT[0])
 
-            var_id = ObjectId(bytes(var_key_string.encode('UTF-8')))
-            lib_var_id = ObjectId(bytes(library_var_key_string.encode('UTF-8')))
+            var_id = ObjectId(var_key_string.encode('utf-16'))
+            lib_var_id = ObjectId(library_var_key_string.encode('utf-16'))
 
             caller_variant_data_dicts = defaultdict(dict)
             max_som_aaf = -1.00
