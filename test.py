@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
             variant_inserts.append(
                 {
-                    "_id": var_key_string,
+                    "genome": config['genome_version'],
                     "chr": var.CHROM,
                     "start": var.start,
                     "end": var.end,
@@ -192,10 +192,15 @@ if __name__ == "__main__":
 
             lib_variant_inserts.append(
                 {
-                    "_id": library_var_key_string,
+                    "genome": config['genome_version'],
+                    "chr": var.CHROM,
+                    "start": var.start,
+                    "end": var.end,
+                    "ref": var.REF,
+                    "alt": var.ALT[0],
                     "sample": samples[sample]['sample_name'],
-                    "extraction": samples[sample]['extraction'],
                     "library_name": samples[sample]['library_name'],
+                    "extraction": samples[sample]['extraction'],
                     "run_id": samples[sample]['run_id'],
                     "panel_name": samples[sample]['panel'],
                     "target_pool": samples[sample]['target_pool'],
